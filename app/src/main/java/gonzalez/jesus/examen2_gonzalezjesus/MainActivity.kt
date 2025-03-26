@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
@@ -37,28 +38,44 @@ class MainActivity : AppCompatActivity() {
             eliminarCancion(nombreEliminar)
         }
 
+        var btnAgregar : Button = findViewById(R.id.btnAgregarCancion) as Button
+
+        btnAgregar.setOnClickListener {
+            val intent = Intent(this, AgregarCancion::class.java)
+            startActivityForResult(intent, 2)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK && data != null) {
             val nombreCancion = data.getStringExtra("nombre")
 
-            if (nombreCancion != null) {
-                val iterator = canciones.iterator()
-                while (iterator.hasNext()) {
-                    val cancion = iterator.next()
-                    if (cancion.nombre == nombreCancion) {
-                        iterator.remove() // Elimina la canción de la lista
-                        break
+            when (requestCode) {
+                1 -> { // Eliminar canción
+                    if (!nombreCancion.isNullOrEmpty()) {
+                        eliminarCancion(nombreCancion)
                     }
                 }
-                adapter?.notifyDataSetChanged()
-                Toast.makeText(this, "Canción eliminada: $nombreCancion", Toast.LENGTH_SHORT).show()
+                2 -> { // Agregar canción
+                    val artistaCancion = data.getStringExtra("artista")
+                    val albumCancion = data.getStringExtra("album")
+                    val duracionCancion = data.getStringExtra("duracion")
+
+                    if (!nombreCancion.isNullOrEmpty() && !artistaCancion.isNullOrEmpty() &&
+                        !albumCancion.isNullOrEmpty() && !duracionCancion.isNullOrEmpty()) {
+
+                        canciones.add(Cancion(nombreCancion, artistaCancion, duracionCancion, albumCancion))
+                        adapter?.notifyDataSetChanged()
+                        Toast.makeText(this, "Canción agregada: $nombreCancion", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
+
 
     fun cargarCanciones(){
         canciones.add(Cancion("Shape of You", "Ed Sheeran", "3:53", "Divide"))
@@ -121,8 +138,12 @@ class CancionAdapter: BaseAdapter {
             intent.putExtra("artista", cancion.artista)
             intent.putExtra("duracion", cancion.duracion)
             intent.putExtra("album", cancion.album)
-            context!!.startActivity(intent)
+
+            if (context is MainActivity) {
+                (context as MainActivity).startActivityForResult(intent, 1)
+            }
         }
+
 
         return vista
     }

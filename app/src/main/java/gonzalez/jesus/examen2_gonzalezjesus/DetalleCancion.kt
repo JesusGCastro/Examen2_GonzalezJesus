@@ -48,5 +48,6 @@ class DetalleCancion : AppCompatActivity() {
             setResult(RESULT_OK, intent)
             finish()
         }
+
     }
 }

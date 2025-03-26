@@ -16,19 +16,21 @@ class AgregarCancion : AppCompatActivity() {
         setContentView(R.layout.activity_agregar_cancion)
 
         var nombre: EditText = findViewById(R.id.etNombreCancion) as EditText
-        var artista: EditText = findViewById(R.id.etArtistaCancion) as EditText
+        var artista: EditText = findViewById(R.id.etArtistaCancion)
         var album: EditText = findViewById(R.id.etAlbumCancion) as EditText
         var duracion: EditText = findViewById(R.id.etDuracionCancion) as EditText
 
         var btnGuardar: Button = findViewById(R.id.btnGuardar) as Button
 
-        btnGuardar.setOnClickListener{
+        btnGuardar.setOnClickListener {
             val nombreCancion = nombre.text.toString().trim()
             val artistaCancion = artista.text.toString().trim()
             val albumCancion = album.text.toString().trim()
             val duracionCancion = duracion.text.toString().trim()
 
-            if (nombreCancion.isNotEmpty() && artistaCancion.isNotEmpty() && albumCancion.isNotEmpty() && duracionCancion.isNotEmpty()) {
+            if (nombreCancion.isNotEmpty() && artistaCancion.isNotEmpty() &&
+                albumCancion.isNotEmpty() && duracionCancion.isNotEmpty()) {
+
                 val intent = Intent()
                 intent.putExtra("nombre", nombreCancion)
                 intent.putExtra("artista", artistaCancion)
@@ -40,6 +42,7 @@ class AgregarCancion : AppCompatActivity() {
                 Toast.makeText(this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show()
             }
         }
+
 
     }
 }
