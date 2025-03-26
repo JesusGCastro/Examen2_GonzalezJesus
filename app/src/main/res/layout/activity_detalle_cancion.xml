@@ -78,7 +78,7 @@
             android:layout_marginTop="80dp"/>
 
         <TextView
-            android:id="@+id/eliminarCancion"
+            android:id="@+id/btnEliminarCancion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Eliminar canción"

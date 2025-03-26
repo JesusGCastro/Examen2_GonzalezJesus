@@ -10,6 +10,7 @@ import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -31,6 +32,27 @@ class MainActivity : AppCompatActivity() {
         var gridview: GridView = findViewById(R.id.gvCanciones) as GridView
         gridview.adapter = adapter
 
+        val nombreEliminar = intent.getStringExtra("nombre")
+        if (nombreEliminar != null) {
+            eliminarCancion(nombreEliminar)
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            val nombre = data.getStringExtra("nombre")
+            val artista = data.getStringExtra("artista")
+            val album = data.getStringExtra("album")
+            val duracion = data.getStringExtra("duracion")
+
+            if (nombre != null && artista != null && album != null && duracion != null) {
+                canciones.add(Cancion(nombre, artista, duracion, album))
+                adapter?.notifyDataSetChanged()
+                Toast.makeText(this, "Canción agregada: $nombre", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     fun cargarCanciones(){
@@ -40,6 +62,19 @@ class MainActivity : AppCompatActivity() {
         canciones.add(Cancion("Smells Like Teen Spirit", "Nirvana", "5:01", "Nevermind"))
         canciones.add(Cancion("Billie Jean", "Michael Jackson", "4:54", "Thriller"))
         canciones.add(Cancion("Someone Like You", "Adele", "4:45", "21"))
+    }
+
+    fun eliminarCancion(nombre: String) {
+        val iterator = canciones.iterator()
+        while (iterator.hasNext()) {
+            val cancion = iterator.next()
+            if (cancion.nombre.equals(nombre, ignoreCase = true)) {
+                iterator.remove()
+                adapter?.notifyDataSetChanged()
+                Toast.makeText(this, "Canción eliminada: $nombre", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
     }
 }
 
