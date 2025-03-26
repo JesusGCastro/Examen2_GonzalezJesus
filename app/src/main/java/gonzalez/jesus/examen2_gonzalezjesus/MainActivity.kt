@@ -41,16 +41,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            val nombre = data.getStringExtra("nombre")
-            val artista = data.getStringExtra("artista")
-            val album = data.getStringExtra("album")
-            val duracion = data.getStringExtra("duracion")
 
-            if (nombre != null && artista != null && album != null && duracion != null) {
-                canciones.add(Cancion(nombre, artista, duracion, album))
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            val nombreCancion = data.getStringExtra("nombre")
+
+            if (nombreCancion != null) {
+                val iterator = canciones.iterator()
+                while (iterator.hasNext()) {
+                    val cancion = iterator.next()
+                    if (cancion.nombre == nombreCancion) {
+                        iterator.remove() // Elimina la canción de la lista
+                        break
+                    }
+                }
                 adapter?.notifyDataSetChanged()
-                Toast.makeText(this, "Canción agregada: $nombre", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Canción eliminada: $nombreCancion", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -111,7 +116,7 @@ class CancionAdapter: BaseAdapter {
         artista.setText(cancion.artista)
 
         nombre.setOnClickListener {
-            var intent = Intent(context, DetalleCancion::class.java)
+            val intent = Intent(context, DetalleCancion::class.java)
             intent.putExtra("nombre", cancion.nombre)
             intent.putExtra("artista", cancion.artista)
             intent.putExtra("duracion", cancion.duracion)

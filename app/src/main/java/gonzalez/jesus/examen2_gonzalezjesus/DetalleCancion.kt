@@ -16,34 +16,33 @@ class DetalleCancion : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalle_cancion)
 
-        var nombre : TextView = findViewById(R.id.nombreCancion) as TextView
-        var artista : TextView = findViewById(R.id.artistaCancion) as TextView
-        var album : TextView = findViewById(R.id.albumCancion) as TextView
-        var duracion : TextView = findViewById(R.id.duracionCancion) as TextView
+        val nombre: TextView = findViewById(R.id.nombreCancion)
+        val artista: TextView = findViewById(R.id.artistaCancion)
+        val album: TextView = findViewById(R.id.albumCancion)
+        val duracion: TextView = findViewById(R.id.duracionCancion)
 
-        var bundle = intent.extras
-
-        if (bundle != null){
-            nombre.setText(bundle.getInt("nombre"))
-            artista.setText(bundle.getInt("artista"))
-            album.setText("Album: "+ bundle.getInt("album"))
-            duracion.setText(bundle.getInt("duracion"))
+        // Obtener los datos correctamente como String
+        val bundle = intent.extras
+        if (bundle != null) {
+            nombre.text = bundle.getString("nombre", "Desconocido")
+            artista.text = bundle.getString("artista", "Desconocido")
+            album.text = "Álbum: " + bundle.getString("album", "Desconocido")
+            duracion.text = bundle.getString("duracion", "0:00")
         }
 
-        var btnAtras : ImageView = findViewById(R.id.btnAtras) as ImageView
-        var btnPlay : Button = findViewById(R.id.btnPlay) as Button
-        var btnEliminar: TextView = findViewById(R.id.btnEliminarCancion) as TextView
+        val btnAtras: ImageView = findViewById(R.id.btnAtras)
+        val btnPlay: Button = findViewById(R.id.btnPlay)
+        val btnEliminar: TextView = findViewById(R.id.btnEliminarCancion)
 
         btnAtras.setOnClickListener {
-            val intent: Intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
-        btnPlay.setOnClickListener{
+        btnPlay.setOnClickListener {
             Toast.makeText(this, "Reproduciendo...", Toast.LENGTH_SHORT).show()
         }
 
-        btnEliminar.setOnClickListener{
+        btnEliminar.setOnClickListener {
             val intent = Intent()
             intent.putExtra("nombre", nombre.text.toString())
             setResult(RESULT_OK, intent)
